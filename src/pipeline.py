@@ -71,7 +71,7 @@ class ChurnPredictionPipeline:
         pred = self.model.predict(X_processed)[0]
         
         # Determine confidence level
-        # TCS Interview Concept: Standard threshold is 0.5. We categorize risk bands
+        # Standard classification threshold is 0.5. We categorize risk bands
         if prob < 0.3:
             risk_level = "Low Risk"
             confidence = (1 - prob) * 100
@@ -82,7 +82,7 @@ class ChurnPredictionPipeline:
             risk_level = "High Risk"
             confidence = prob * 100
             
-        # Generate actionable business recommendations (fresher interview highlight)
+        # Generate actionable business recommendations
         recommendations = []
         if risk_level in ["Medium Risk", "High Risk"]:
             if customer_dict.get('Contract') == 'Month-to-month':

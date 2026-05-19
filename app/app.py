@@ -334,7 +334,7 @@ else:
                 st.metric(label="Prediction Confidence", value=f"{conf:.1f}%")
                 st.progress(conf / 100)
                 
-            # Business Retention Recommendations (TCS Interview Highlights!)
+            # Business Retention Recommendations
             st.markdown("<br>#### 📋 Actionable Customer Retention Playbook", unsafe_allow_html=True)
             st.write("The AI marketing planner has generated the following tactical customer strategies to mitigate churn:")
             

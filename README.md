@@ -2,7 +2,7 @@
 
 An end-to-end, production-grade Machine Learning classification system designed to analyze and predict customer churn for a telecommunication subscriber base. 
 
-This repository is optimized to be **resume-ready** and directly applicable for **AI/ML placements, internships, and entry-level developer interviews at companies like TCS (Digital/Prime), Infosys, Wipro, and other data analyst tracks.**
+This repository provides a complete, production-grade Machine Learning classification system designed to analyze subscriber behaviors, predict churn risks, and provide actionable recommendations.
 
 ---
 
@@ -77,7 +77,7 @@ The project utilizes the classic **Kaggle Telco Customer Churn dataset** (7,043 
 ---
 
 ## 🛠️ Feature Engineering & Preprocessing
-To deliver state-of-the-art predictive performance, the following feature engineering steps were crafted in [src/preprocess.py](file:///e:/AntiGravity/Customer%20Churn%20Prediction/src/preprocess.py):
+To deliver high-performance predictive analytics, the following feature engineering steps were implemented in [src/preprocess.py](src/preprocess.py):
 1. **`tenure_group`**: Segmented numeric tenure into business cycles (`0-1 Year`, `1-2 Years`, `2-4 Years`, `4-5 Years`, `Over 5 Years`).
 2. **`Number_of_Services`**: Combined sum of active auxiliary online services used by the subscriber.
 3. **`Has_Partner_and_Dependents`**: Interaction variable highlighting strong family binding which statistically decreases churn.
@@ -137,23 +137,19 @@ Below is the summary of models trained on the Telco dataset (Stratified 80-20 Sp
 
 ---
 
-## 👨‍💼 TCS / Placement Interview Preparation Q&A
+## ⚙️ Key Methodological Details
 
-Highlight these answers during your technical panel rounds to demonstrate deep expertise:
+### 1. Handling the `TotalCharges` Data Cleaning Challenge
+The dataset contains brand-new customers with a `tenure` of `0` months. For these entries, `TotalCharges` is filled with an empty space string `" "`. This causes Pandas to load the entire column as strings. This was resolved by converting empty spaces into `NaN`, parsing the column to `float`, and filling the missing values with `0.0` (as logical total charges for a new customer must be zero).
 
-> [!TIP]
-> **Q1: Why is `TotalCharges` represented as an 'object' initially by Pandas, and how did you resolve it?**
-> *Answer*: The dataset contains brand-new customers with a `tenure` of `0` months. For these entries, `TotalCharges` is filled with an empty space string `" "`. This caused Pandas to load the entire column as strings. I resolved it by converting empty spaces into `NaN`, parsing the column to `float`, and filling the missing values with `0.0` (as logical total charges for a new customer must be zero). This shows data cleaning pragmatism.
+### 2. Safeguarding Against Data Imbalance
+Since loyal customers outweigh churned ones (~74% to 26%), standard classifiers could overfit to the majority class. This was handled by:
+1. Using a **Stratified Train-Test Split** so the exact ratio of churners is preserved in both folds.
+2. Setting `class_weight='balanced'` in Random Forest and Logistic Regression models, and computing a precise `scale_pos_weight` in XGBoost. This assigns a higher weight penalty to errors made on the minority class during optimization.
+3. Prioritizing **Recall** and **F1-Score** during model selection.
 
-> [!TIP]
-> **Q2: How does the model handling class imbalance work under the hood?**
-> *Answer*: Since loyal customers outweigh churned ones (~74% to 26%), standard classifiers would overfit to the majority class. I mitigated this by:
-> 1. Using a **Stratified Train-Test Split** so the exact ratio of churners is preserved in both folds.
-> 2. Setting `class_weight='balanced'` in Random Forest and Logistic Regression, and computing a precise `scale_pos_weight` in XGBoost. This assigns a higher weight penalty to errors made on the churned minority class during backpropagation/optimization.
-
-> [!TIP]
-> **Q3: What is Data Leakage and how did you strictly safeguard your code from it?**
-> *Answer*: Data Leakage happens when information from the validation or testing set leaks into the training pipeline (e.g., scaling based on the mean of the *entire* dataset). To strictly safeguard my code, I performed train-test split *before* any operations. I fitted the `StandardScaler` and `OneHotEncoder` *only* on the training split, and then used that *already-fitted* preprocessor to transform the test split and real-time inputs.
+### 3. Preventing Data Leakage
+To strictly safeguard the code, the train-test split was performed *before* any transformation operations. The scaling and encoding parameters (using `StandardScaler` and `OneHotEncoder`) were fit *only* on the training split, and then used to transform both the test split and real-time inputs.
 
 ---
 

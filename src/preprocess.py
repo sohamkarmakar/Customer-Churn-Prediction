@@ -34,7 +34,7 @@ def clean_data(df):
         
     # 2. TotalCharges has blank spaces (" ") for new customers (tenure = 0).
     # Since tenure is 0, they haven't paid anything yet, so we replace with NaN and fill with 0.0.
-    # Note for TCS Interviews: TotalCharges is originally read as object/string due to these spaces.
+    # TotalCharges is originally read as object/string due to these spaces.
     cleaned_df['TotalCharges'] = cleaned_df['TotalCharges'].replace('', np.nan)
     cleaned_df['TotalCharges'] = pd.to_numeric(cleaned_df['TotalCharges'], errors='coerce')
     
@@ -66,7 +66,7 @@ def engineer_features(df):
     fe_df = df.copy()
     
     # 1. Binning Tenure
-    # TCS Interview tip: Binning numerical variables can capture non-linear relationships.
+    # Binning numerical variables can capture non-linear relationships.
     def get_tenure_group(months):
         if months <= 12:
             return '0-1 Year'
